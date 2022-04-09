@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  nginx:
+    env_file:
+      - .env
+      - .build_env
+
+  api:
+    build:
+      context: ./projects/image_processor_api
+      dockerfile: Dockerfile.build
+    env_file:
+      - .env
+      - .build_env
+
+  auth:
+    build:
+      context: ./projects/image_processor_auth
+      dockerfile: Dockerfile.build
+    env_file:
+      - .env
+      - .build_env
+
+  ui:
+    build:
+      context: ./projects/image_processor_ui
+      dockerfile: Dockerfile.build
+    env_file:
+      - .env
+      - .build_env
+
+  worker:
+    build:
+      context: ./projects/image_processor_worker
+      dockerfile: Dockerfile.build
+    env_file:
+      - .env
+      - .build_env
+
+  db:
+    env_file:
+      - .env
+      - .build_env
+
+  adminer:
+    env_file:
+      - .env
+      - .build_env

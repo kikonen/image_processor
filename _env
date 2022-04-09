@@ -1,0 +1,8 @@
+BASE_TAG=
+BUILD_TAG=
+BASE_NAME=image_processor
+BUILD_NAME=image_processor
+CLONE_PROJECTS="api auth ui worker"
+BASE_IMAGES="api auth ui worker"
+BUILD_IMAGES="api auth ui worker"
+DOCKER_REGISTRY_URL=docker.ikari.fi

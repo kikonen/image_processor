@@ -1,0 +1,75 @@
+ARG DOCKER_REGISTRY_URL
+ARG BUILD_NAME
+ARG BASE_TAG
+FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_auth:$BASE_TAG as builder
+WORKDIR /app
+
+####################
+COPY . .yarnrc . /app/
+
+RUN env && \
+    ln -sf /node_modules node_modules && \
+    ls -al
+
+RUN yarn install
+
+RUN bundle config set without 'development test'
+RUN bundle install
+
+RUN rake assets:precompile
+
+####################
+FROM phusion/passenger-ruby27:2.1.0
+WORKDIR /app
+
+RUN mkdir -p log && \
+    mkdir -p tmp && \
+    chown -R app:app /app
+
+# https://github.com/phusion/passenger-docker
+ENV HOME /root
+
+# http://blog.siami.fr/diving-in-rails-the-request-handling
+ENV RAILS_ENV=production \
+    RAILS_SERVE_STATIC_FILES=false \
+    RAILS_FORCE_SSL=true \
+    SCRIPT_NAME=/ui \
+    RAILS_RELATIVE_URL_ROOT=/ui
+
+ENV BUNDLE_PATH=/bundle/vendor \
+    GEM_HOME=/bundle/vendor/ruby/2.7.0 \
+    GEM_PATH=/bundle/vendor/ruby/2.7.0/bin \
+    PATH=$PATH:/app/bin
+
+####################
+# https://github.com/phusion/passenger-docker
+RUN rm /etc/nginx/sites-enabled/default
+COPY docker/webapp.conf /etc/nginx/sites-enabled/webapp.conf
+COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
+
+####################
+COPY --chown=app:app . .
+COPY --chown=app:app --from=builder /app/public/assets public/assets
+COPY --chown=app:app --from=builder /app/public/packs public/packs
+COPY --chown=app:app --from=builder /bundle /bundle
+
+####################
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN bundle config set without 'development test deploy' && \
+    bundle install && \
+    rm -fr vendor && \
+    ln -sf /var/run/secrets/AUTH_MASTER_KEY config/master.key && \
+    env && \
+    ls -al
+
+####################
+# https://github.com/phusion/passenger-docker
+RUN rm -f /etc/service/nginx/down && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+####################
+CMD ["/sbin/my_init"]

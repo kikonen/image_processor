@@ -1,0 +1,100 @@
+services:
+  nginx:
+    env_file:
+      - .env
+      - .production_env
+    restart: always
+
+  auth:
+    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_auth:${BUILD_TAG}
+    env_file:
+      - .env
+      - .production_env
+    environment:
+      CONTAINER_VERSION: ${BUILD_TAG}
+    secrets:
+      - AUTH_MASTER_KEY
+    volumes:
+      - auth_log:/app/log
+      - ./auth-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./auth-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+    restart: always
+
+  api:
+    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_api:${BUILD_TAG}
+    env_file:
+      - .env
+      - .production_env
+    environment:
+      CONTAINER_VERSION: ${BUILD_TAG}
+    secrets:
+      - API_MASTER_KEY
+    volumes:
+      - api_log:/app/log
+      - ./api-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./api-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+    restart: always
+
+  ui:
+    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_ui:${BUILD_TAG}
+    env_file:
+      - .env
+      - .production_env
+    environment:
+      CONTAINER_VERSION: ${BUILD_TAG}
+    secrets:
+      - UI_MASTER_KEY
+    volumes:
+      - ui_log:/app/log
+      - ./ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./ui-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+    restart: always
+
+  worker:
+    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_worker:${BUILD_TAG}
+    env_file:
+      - .env
+      - .production_env
+    environment:
+      CONTAINER_VERSION: ${BUILD_TAG}
+    secrets:
+      - WORKER_MASTER_KEY
+    volumes:
+      - worker_log:/app/log
+      - ./worker-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./worker-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+    restart: always
+
+  db:
+    env_file:
+      - .env
+      - .production_env
+    secrets:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+    restart: always
+
+  adminer:
+    env_file:
+      - .env
+      - .production_env
+
+secrets:
+  POSTGRES_PASSWORD:
+    file: .production_secrets/POSTGRES_PASSWORD
+  POSTGRES_USER:
+    file: .production_secrets/POSTGRES_USER
+  AUTH_MASTER_KEY:
+    file: .production_secrets/AUTH_MASTER_KEY
+  API_MASTER_KEY:
+    file: .production_secrets/API_MASTER_KEY
+  UI_MASTER_KEY:
+    file: .production_secrets/UI_MASTER_KEY
+  WORKER_MASTER_KEY:
+    file: .production_secrets/WORKER_MASTER_KEY
+
+volumes:
+  auth_log:
+  api_log:
+  ui_log:
+  worker_log:

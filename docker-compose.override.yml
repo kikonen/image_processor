@@ -1,0 +1,144 @@
+version: '3.3'
+
+services:
+  nginx:
+    env_file:
+      - .env
+      - .development_env
+
+  auth:
+    build:
+      context: ./projects/image_processor_auth
+      dockerfile: Dockerfile
+      args:
+        DOCKER_UID: ${DOCKER_UID}
+        DOCKER_GID: ${DOCKER_GID}
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - AUTH_MASTER_KEY
+    labels:
+      ports: "3000"
+    volumes:
+      - ./projects/auth:/app
+      - auth_assets:/app/public/assets
+      - auth_bundle:/bundle
+      - auth_node_modules:/node_modules
+      - auth_tmp:/app/tmp
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+
+  api:
+    build:
+      context: ./projects/image_processor_api
+      dockerfile: Dockerfile
+      args:
+        DOCKER_UID: ${DOCKER_UID}
+        DOCKER_GID: ${DOCKER_GID}
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - API_MASTER_KEY
+    labels:
+      ports: "3000"
+    volumes:
+      - ./projects/api:/app
+      - api_assets:/app/public/assets
+      - api_bundle:/bundle
+      - api_node_modules:/node_modules
+      - api_tmp:/app/tmp
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+
+  ui:
+    build:
+      context: ./projects/image_processor_ui
+      dockerfile: Dockerfile
+      args:
+        DOCKER_UID: ${DOCKER_UID}
+        DOCKER_GID: ${DOCKER_GID}
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - UI_MASTER_KEY
+    labels:
+      ports: "3000"
+    volumes:
+      - ./projects/ui:/app
+      - ui_assets:/app/public/assets
+      - ui_bundle:/bundle
+      - ui_node_modules:/node_modules
+      - ui_tmp:/app/tmp
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+
+  worker:
+    build:
+      context: ./projects/image_processor_worker
+      dockerfile: Dockerfile
+      args:
+        DOCKER_UID: ${DOCKER_UID}
+        DOCKER_GID: ${DOCKER_GID}
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - WORKER_MASTER_KEY
+    labels:
+      ports: "3000"
+    volumes:
+      - ./projects/worker:/app
+      - worker_assets:/app/public/assets
+      - worker_bundle:/bundle
+      - worker_node_modules:/node_modules
+      - worker_tmp:/app/tmp
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+
+  db:
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+
+  adminer:
+   env_file:
+      - .env
+      - .development_env
+
+volumes:
+  api_assets:
+  api_bundle:
+  api_node_modules:
+  api_tmp:
+  auth_assets:
+  auth_bundle:
+  auth_node_modules:
+  auth_tmp:
+  ui_assets:
+  ui_bundle:
+  ui_node_modules:
+  ui_tmp:
+  worker_assets:
+  worker_bundle:
+  worker_node_modules:
+  worker_tmp:
+
+secrets:
+  POSTGRES_PASSWORD:
+    file: .development_secrets/POSTGRES_PASSWORD
+  POSTGRES_USER:
+    file: .development_secrets/POSTGRES_USER
+  AUTH_MASTER_KEY:
+    file: .development_secrets/AUTH_MASTER_KEY
+  API_MASTER_KEY:
+    file: .development_secrets/API_MASTER_KEY
+  UI_MASTER_KEY:
+    file: .development_secrets/UI_MASTER_KEY
+  WORKER_MASTER_KEY:
+    file: .development_secrets/WORKER_MASTER_KEY

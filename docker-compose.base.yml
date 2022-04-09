@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  auth:
+    container_name: ${BUILD_NAME}_${DOCKER_ENV}_auth
+    build:
+      context: ./projects/image_processor_auth
+      dockerfile: Dockerfile.base
+
+  api:
+    container_name: ${BUILD_NAME}_${DOCKER_ENV}_api
+    build:
+      context: ./projects/image_processor_api
+      dockerfile: Dockerfile.base
+
+  ui:
+    container_name: ${BUILD_NAME}_${DOCKER_ENV}_ui
+    build:
+      context: ./projects/image_processor_ui
+      dockerfile: Dockerfile.base
+
+  worker:
+    container_name: ${BUILD_NAME}_${DOCKER_ENV}_worker
+    build:
+      context: ./projects/image_processor_worker
+      dockerfile: Dockerfile.base
