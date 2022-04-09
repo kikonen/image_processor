@@ -5,7 +5,7 @@ if [[ $SCRIPT_DIR == "" ]]; then
 fi
 
 PROJECTS=$(ls $PROJECTS_DIR)
-echo "SETUP PROJECTS: $PROJECTS"
+#echo "SETUP PROJECTS: $PROJECTS"
 
 LOGS_DIR=$ROOT_DIR/log
 
@@ -22,8 +22,8 @@ echo "$PROJECTS" | tr ' ' '\n' | while read PROJECT; do
         continue
     fi
 
-    echo "FROM: $SERVICE_DIR"
-    echo "TO: $PROJECT_DIR"
+#    echo "FROM: $SERVICE_DIR"
+#    echo "TO: $PROJECT_DIR"
 
     cp -a $SERVICE_DIR/* $PROJECT_DIR
     cp -a $SERVICE_DIR/.dockerignore $PROJECT_DIR
