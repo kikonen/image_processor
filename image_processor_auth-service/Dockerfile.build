@@ -5,18 +5,13 @@ FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_auth:$BASE_TAG as builder
 WORKDIR /app
 
 ####################
-COPY . .yarnrc . /app/
+COPY . /app/
 
 RUN env && \
-    ln -sf /node_modules node_modules && \
     ls -al
-
-RUN yarn install
 
 RUN bundle config set without 'development test'
 RUN bundle install
-
-RUN rake assets:precompile
 
 ####################
 FROM phusion/passenger-ruby27:2.1.0
@@ -49,8 +44,6 @@ COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
 
 ####################
 COPY --chown=app:app . .
-COPY --chown=app:app --from=builder /app/public/assets public/assets
-COPY --chown=app:app --from=builder /app/public/packs public/packs
 COPY --chown=app:app --from=builder /bundle /bundle
 
 ####################
