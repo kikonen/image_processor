@@ -21,7 +21,7 @@ services:
     labels:
       ports: "3000"
     volumes:
-      - ./projects/auth:/app
+      - ./projects/image_processor_auth:/app
       - auth_assets:/app/public/assets
       - auth_bundle:/bundle
       - auth_node_modules:/node_modules
@@ -44,7 +44,7 @@ services:
     labels:
       ports: "3000"
     volumes:
-      - ./projects/api:/app
+      - ./projects/image_processor_api:/app
       - api_assets:/app/public/assets
       - api_bundle:/bundle
       - api_node_modules:/node_modules
@@ -67,7 +67,7 @@ services:
     labels:
       ports: "3000"
     volumes:
-      - ./projects/ui:/app
+      - ./projects/image_processor_ui:/app
       - ui_assets:/app/public/assets
       - ui_bundle:/bundle
       - ui_node_modules:/node_modules
@@ -90,7 +90,7 @@ services:
     labels:
       ports: "3000"
     volumes:
-      - ./projects/worker:/app
+      - ./projects/image_processor_worker:/app
       - worker_assets:/app/public/assets
       - worker_bundle:/bundle
       - worker_node_modules:/node_modules

@@ -21,7 +21,9 @@ echo "$PROJECTS" | tr ' ' '\n' | while read PROJECT; do
         echo "N/A: $PROJECT_DIR"
         continue
     fi
-#    echo $SERVICE_DIR
+
+    echo "FROM: $SERVICE_DIR"
+    echo "TO: $PROJECT_DIR"
 
     cp -a $SERVICE_DIR/* $PROJECT_DIR
     cp -a $SERVICE_DIR/.dockerignore $PROJECT_DIR

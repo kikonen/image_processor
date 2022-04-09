@@ -16,8 +16,8 @@ services:
       - AUTH_MASTER_KEY
     volumes:
       - auth_log:/app/log
-      - ./auth-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
-      - ./auth-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+      - ./image_processor_auth-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./image_processor_auth-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
 
   api:
@@ -31,8 +31,8 @@ services:
       - API_MASTER_KEY
     volumes:
       - api_log:/app/log
-      - ./api-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
-      - ./api-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+      - ./image_processor_api-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./image_processor_api-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
 
   ui:
@@ -46,8 +46,8 @@ services:
       - UI_MASTER_KEY
     volumes:
       - ui_log:/app/log
-      - ./ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
-      - ./ui-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+      - ./image_processor_ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./image_processor_ui-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
 
   worker:
@@ -61,8 +61,8 @@ services:
       - WORKER_MASTER_KEY
     volumes:
       - worker_log:/app/log
-      - ./worker-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
-      - ./worker-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
+      - ./image_processor_worker-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./image_processor_worker-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
 
   db:

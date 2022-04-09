@@ -74,6 +74,27 @@ services:
     depends_on:
       - db
       - nginx
+      - redis
+
+  worker:
+    container_name: ${BASE_NAME}_${DOCKER_ENV}_worker
+    environment:
+      DOCKER_ENV: ${DOCKER_ENV}
+      SERVICE_MODE: ${SERVICE_MODE}
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "2"
+    working_dir: /app
+    labels:
+      ports: "3000"
+    networks:
+      - backend
+    volumes:
+    - worker_tmp:/app/tmp
+    depends_on:
+      - db
+      - redis
 
   db:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_db
@@ -92,6 +113,19 @@ services:
       - backend
     volumes:
     - postgres_data:/data
+
+  redis:
+    container_name: ${BASE_NAME}_${DOCKER_ENV}_redis
+    image: redis:6.2.3
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "2"
+    volumes:
+    - redis_data:/data
+    networks:
+      - backend
 
   adminer:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_adminer
@@ -115,6 +149,8 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
   api_tmp:
   auth_tmp:
   ui_tmp:
+  worker_tmp:
