@@ -7,6 +7,76 @@ Images are uploaded, and then processed asynchrounosly
 - [Architecture](design/architecture.pdf)
 - [DB schema](design/db.pdf)
 
+# Development
+
+## Setup
+```bash
+cp _env .env
+cp _development_env .development_env
+cp _image_processor_secrets .developmment_secrets
+
+```
+
+## Database setup
+
+```bash
+cd image_processor
+scripts/rails_shell.sh api
+rake db:drop db:create db:migrate db:setup
+```
+
+## Build
+
+```bash
+cd image_processor
+scripts/development_build.sh
+```
+
+## Run
+
+```bash
+cd image_processor
+scripts/development_up.sh ui
+
+http://localhost:8121/ui
+```
+
+## Base build
+
+```bash
+cd image_processor
+scripts/base_build.sh
+scripts/base_tag.sh x.y
+scripts/base_push.sh x.y
+```
+**NOTE** update .env with "BASE_TAG=x.y"
+
+
+## Production build
+
+```bash
+cd image_processor
+scripts/production_build.sh
+scripts/production_tag.sh x.y
+scripts/production_push.sh x.y
+```
+
+**NOTE** update .env with "BUILD_TAG=x.y"
+
+## Production database initial setup
+
+```bash
+cd image_processor
+DOCKER_ENV=production scripts/rails_shell.sh api
+rake db:drop db:create db:migrate db:setup
+```
+
+## Production run
+
+```bash
+cd image_processor
+scripts/production_up.sh -d
+```
 
 # References
 
