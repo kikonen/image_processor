@@ -2,6 +2,11 @@
 
 Images are uploaded, and then processed asynchrounosly
 
+# Design
+
+- [Architecture](design/architecture.pdf)
+- [DB schema](design/db.pdf)
+
 
 # References
 
@@ -10,6 +15,8 @@ Images are uploaded, and then processed asynchrounosly
 - https://www.wyeworks.com/blog/2016/01/12/improvements-to-error-responses-in-rails-5-api-mode/
 - https://github.com/taf2/curb
 - https://smartlogic.io/blog/permitting-nested-arrays-using-strong-params-in-rails/
+- https://guides.rubyonrails.org/active_model_basics.html
+- https://plugins.krajee.com/file-input
 
 ## JWT
 - https://medium.com/binar-academy/rails-api-jwt-authentication-a04503ea3248
