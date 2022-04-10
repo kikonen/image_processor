@@ -27,3 +27,6 @@ Images are uploaded, and then processed asynchrounosly
 - https://github.com/tonytonyjan/exif
 - https://stackoverflow.com/questions/8635578/how-to-check-whether-the-character-is-utf-8
 - https://stackoverflow.com/questions/16530038/how-to-remove-non-printable-invisible-characters-in-ruby
+
+## Docker
+- https://stackoverflow.com/questions/65765439/http-origin-header-https-myapp-com-didnt-match-request-base-url-http-mya
