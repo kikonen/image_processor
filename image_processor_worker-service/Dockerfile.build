@@ -28,8 +28,8 @@ ENV HOME /root
 ENV RAILS_ENV=production \
     RAILS_SERVE_STATIC_FILES=false \
     RAILS_FORCE_SSL=true \
-    SCRIPT_NAME=/ui \
-    RAILS_RELATIVE_URL_ROOT=/ui
+    SCRIPT_NAME=/worker \
+    RAILS_RELATIVE_URL_ROOT=/worker
 
 ENV BUNDLE_PATH=/bundle/vendor \
     GEM_HOME=/bundle/vendor/ruby/2.7.0 \

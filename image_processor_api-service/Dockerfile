@@ -13,8 +13,8 @@ RUN test -n "$DOCKER_UID" && \
 ####################
 # http://blog.siami.fr/diving-in-rails-the-request-handling
 ENV RAILS_ENV=development \
-    SCRIPT_NAME=/ui \
-    RAILS_RELATIVE_URL_ROOT=/ui \
+    SCRIPT_NAME=/api \
+    RAILS_RELATIVE_URL_ROOT=/api \
     PIDFILE=/pids/server.pid
 
 ENV BUNDLE_PATH=/bundle/vendor \

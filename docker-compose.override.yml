@@ -18,6 +18,8 @@ services:
       - .development_env
     secrets:
       - AUTH_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     labels:
       ports: "3000"
     volumes:
@@ -41,6 +43,10 @@ services:
       - .development_env
     secrets:
       - API_MASTER_KEY
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - JWT_KEY
+      - JWT_KEY_PUB
     labels:
       ports: "3000"
     volumes:
@@ -64,6 +70,8 @@ services:
       - .development_env
     secrets:
       - UI_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     labels:
       ports: "3000"
     volumes:
@@ -87,6 +95,8 @@ services:
       - .development_env
     secrets:
       - WORKER_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     labels:
       ports: "3000"
     volumes:
@@ -128,17 +138,3 @@ volumes:
   worker_bundle:
   worker_node_modules:
   worker_tmp:
-
-secrets:
-  POSTGRES_PASSWORD:
-    file: .development_secrets/POSTGRES_PASSWORD
-  POSTGRES_USER:
-    file: .development_secrets/POSTGRES_USER
-  AUTH_MASTER_KEY:
-    file: .development_secrets/AUTH_MASTER_KEY
-  API_MASTER_KEY:
-    file: .development_secrets/API_MASTER_KEY
-  UI_MASTER_KEY:
-    file: .development_secrets/UI_MASTER_KEY
-  WORKER_MASTER_KEY:
-    file: .development_secrets/WORKER_MASTER_KEY

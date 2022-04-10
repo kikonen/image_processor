@@ -28,6 +28,8 @@ if [[ -f $ENV_FILE ]]; then
    . $ENV_FILE
 fi
 
+SECRETS_DIR=$ROOT_DIR/.${DOCKER_ENV}_secrets
+
 DOCKER_COMPOSE_BASE="docker-compose --project-dir=${ROOT_DIR} --project-name ${BASE_NAME}_${DOCKER_ENV} --env-file ${ENV_FILE}"
 
 if [[ $DOCKER_ENV == 'production' ]]; then
@@ -57,6 +59,8 @@ export PROJECTS_DIR
 export BASE_NAME
 export BUILD_TAG
 export COMPOSE_PROFILES
+
+export SECRETS_DIR
 
 export CLONE_PROJECTS
 export BUILD_NAME

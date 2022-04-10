@@ -143,6 +143,25 @@ services:
       - db
       - nginx
 
+
+secrets:
+  POSTGRES_PASSWORD:
+    file: ${SECRETS_DIR}/POSTGRES_PASSWORD
+  POSTGRES_USER:
+    file: ${SECRETS_DIR}/POSTGRES_USER
+  AUTH_MASTER_KEY:
+    file: ${SECRETS_DIR}/AUTH_MASTER_KEY
+  API_MASTER_KEY:
+    file: ${SECRETS_DIR}/API_MASTER_KEY
+  UI_MASTER_KEY:
+    file: ${SECRETS_DIR}/UI_MASTER_KEY
+  WORKER_MASTER_KEY:
+    file: ${SECRETS_DIR}/WORKER_MASTER_KEY
+  JWT_KEY:
+    file: ${SECRETS_DIR}/jwt_key
+  JWT_KEY_PUB:
+    file: ${SECRETS_DIR}/jwt_key.pub
+
 networks:
   frontend:
   backend:
