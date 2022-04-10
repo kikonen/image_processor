@@ -52,6 +52,7 @@ services:
       - UI_MASTER_KEY
       - JWT_KEY
       - JWT_KEY_PUB
+      - FAKE_TOKEN
     volumes:
       - ui_log:/app/log
       - ./image_processor_ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf

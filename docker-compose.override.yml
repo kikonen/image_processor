@@ -78,6 +78,7 @@ services:
       - UI_MASTER_KEY
       - JWT_KEY
       - JWT_KEY_PUB
+      - FAKE_TOKEN
     labels:
       ports: "3000"
     volumes:

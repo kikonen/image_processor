@@ -164,6 +164,8 @@ secrets:
     file: ${SECRETS_DIR}/jwt_key
   JWT_KEY_PUB:
     file: ${SECRETS_DIR}/jwt_key.pub
+  FAKE_TOKEN:
+    file: ${SECRETS_DIR}/fake_token
 
 networks:
   frontend:
