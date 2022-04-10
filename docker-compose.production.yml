@@ -14,6 +14,8 @@ services:
       CONTAINER_VERSION: ${BUILD_TAG}
     secrets:
       - AUTH_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     volumes:
       - auth_log:/app/log
       - ./image_processor_auth-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
@@ -29,6 +31,10 @@ services:
       CONTAINER_VERSION: ${BUILD_TAG}
     secrets:
       - API_MASTER_KEY
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - JWT_KEY
+      - JWT_KEY_PUB
     volumes:
       - api_log:/app/log
       - ./image_processor_api-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
@@ -44,6 +50,8 @@ services:
       CONTAINER_VERSION: ${BUILD_TAG}
     secrets:
       - UI_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     volumes:
       - ui_log:/app/log
       - ./image_processor_ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
@@ -59,8 +67,11 @@ services:
       CONTAINER_VERSION: ${BUILD_TAG}
     secrets:
       - WORKER_MASTER_KEY
+      - JWT_KEY
+      - JWT_KEY_PUB
     volumes:
       - worker_log:/app/log
+      - worker_storage:/app/storage
       - ./image_processor_worker-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
       - ./image_processor_worker-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
@@ -84,3 +95,4 @@ volumes:
   api_log:
   ui_log:
   worker_log:
+  worker_storage:

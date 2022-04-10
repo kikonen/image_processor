@@ -13,6 +13,5 @@ if [[ "$SERVICE_MODE" == "debug" ]]; then
     sleep infinity
 else
     bundle check || bundle install
-    yarn install
-    bundle exec rails s -b 0.0.0.0 -p 3000
+    QUEUE=image_fetch bundle exec rake resque:work
 fi
