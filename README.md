@@ -16,7 +16,7 @@ Images are uploaded, and then processed asynchrounosly
 - https://github.com/taf2/curb
 - https://smartlogic.io/blog/permitting-nested-arrays-using-strong-params-in-rails/
 - https://guides.rubyonrails.org/active_model_basics.html
-- https://plugins.krajee.com/file-input
+- https://stackoverflow.com/questions/13537920/ruby-split-by-whitespace
 
 ## JWT
 - https://medium.com/binar-academy/rails-api-jwt-authentication-a04503ea3248

@@ -36,7 +36,7 @@ RUN mkdir -p /node_modules && \
 ####################
 RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get update && \
-    apt-get install -y --no-install-recommends nodejs libexif-dev libpq-dev postgresql-client socat sudo grep less vim
+    apt-get install -y --no-install-recommends nodejs libcurl4-openssl-dev libexif-dev libpq-dev postgresql-client socat sudo grep less vim
 
 RUN npm install --global yarn
 
