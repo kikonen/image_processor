@@ -15,26 +15,6 @@ services:
       - "127.0.0.1:${NGINX_PORT}:8080"
     command: ['nginx', '-g', 'daemon off;']
 
-  api:
-    container_name: ${BASE_NAME}_${DOCKER_ENV}_api
-    environment:
-      DOCKER_ENV: ${DOCKER_ENV}
-      SERVICE_MODE: ${SERVICE_MODE}
-    logging:
-      options:
-        max-size: "1m"
-        max-file: "2"
-    working_dir: /app
-    labels:
-      ports: "3000"
-    networks:
-      - backend
-    volumes:
-    - api_tmp:/app/tmp
-    depends_on:
-      - db
-      - nginx
-
   auth:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_auth
     environment:
@@ -48,12 +28,34 @@ services:
     labels:
       ports: "3000"
     networks:
-      - backend
+      - frontend
     volumes:
     - auth_tmp:/app/tmp
     depends_on:
+      - nginx
+      - api
+
+  api:
+    container_name: ${BASE_NAME}_${DOCKER_ENV}_api
+    environment:
+      DOCKER_ENV: ${DOCKER_ENV}
+      SERVICE_MODE: ${SERVICE_MODE}
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "2"
+    working_dir: /app
+    labels:
+      ports: "3000"
+    networks:
+      - frontend
+      - backend
+    volumes:
+    - api_tmp:/app/tmp
+    depends_on:
       - db
       - nginx
+      - redis
 
   ui:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_ui
@@ -68,13 +70,12 @@ services:
     labels:
       ports: "3000"
     networks:
-      - backend
+      - frontend
     volumes:
     - ui_tmp:/app/tmp
     depends_on:
-      - db
       - nginx
-      - redis
+      - api
 
   worker:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_worker
@@ -93,8 +94,8 @@ services:
     volumes:
     - worker_tmp:/app/tmp
     depends_on:
-      - db
       - redis
+      - api
 
   db:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_db
@@ -130,6 +131,7 @@ services:
   adminer:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_adminer
     image: adminer
+    restart: unless-stopped
     profiles: ["development"]
     logging:
       options:
@@ -138,6 +140,7 @@ services:
     labels:
       ports: "8080"
     networks:
+      - frontend
       - backend
     depends_on:
       - db

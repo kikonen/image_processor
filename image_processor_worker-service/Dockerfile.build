@@ -48,7 +48,7 @@ COPY --chown=app:app --from=builder /bundle /bundle
 
 ####################
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends postgresql-client && \
+    apt-get install -y --no-install-recommends libexif-dev postgresql-client && \
     rm -rf /var/lib/apt/lists/*
 
 RUN bundle config set without 'development test deploy' && \

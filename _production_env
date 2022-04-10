@@ -6,3 +6,5 @@ DB_HOST=db
 DB_SUFFIX=
 
 REDIS_HOST=redis
+
+API_BASE_URL=http://api:3000

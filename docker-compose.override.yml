@@ -5,6 +5,8 @@ services:
     env_file:
       - .env
       - .development_env
+    stdin_open: true
+    tty: true
 
   auth:
     build:
@@ -30,6 +32,8 @@ services:
       - auth_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+    stdin_open: true
+    tty: true
 
   api:
     build:
@@ -57,6 +61,8 @@ services:
       - api_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+    stdin_open: true
+    tty: true
 
   ui:
     build:
@@ -82,6 +88,8 @@ services:
       - ui_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+    stdin_open: true
+    tty: true
 
   worker:
     build:
@@ -95,6 +103,8 @@ services:
       - .development_env
     secrets:
       - WORKER_MASTER_KEY
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
       - JWT_KEY
       - JWT_KEY_PUB
     labels:
@@ -107,6 +117,8 @@ services:
       - worker_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+    stdin_open: true
+    tty: true
 
   db:
     env_file:
