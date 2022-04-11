@@ -7,6 +7,18 @@ Images are uploaded, and then processed asynchrounosly
 - [Architecture](design/architecture.pdf)
 - [DB schema](design/db.pdf)
 
+# Project structure
+
+## Repositories
+- [Deployment (this)](https://github.com/kikonen/image_processor)
+- [API](https://github.com/kikonen/image_processor_api)
+- [UI](https://github.com/kikonen/image_processor_ui)
+- [Authentication (TBD!)](https://github.com/kikonen/image_processor_auth)
+- [Worker](https://github.com/kikonen/image_processor_worker)
+
+## Pending (known) issues
+- [Issues](https://github.com/kikonen/image_processor/issues)
+
 # Development
 
 ## Setup
