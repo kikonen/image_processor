@@ -20,8 +20,8 @@ RUN apt-get update && \
 COPY Gemfile Gemfile.lock \
     /app/
 
-RUN bundle config set without 'development test'
-RUN bundle install
+RUN bundle config set without 'development test' && \
+    bundle install
 
 RUN rm -fr Gemfile* package* yarn* .yarnrc .bundle && \
     pwd && \

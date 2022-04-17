@@ -1,6 +1,6 @@
 server {
     listen 8080;
-    server_name demo;
+    server_name image;
 
     # https://stackoverflow.com/questions/28028789/nginx-proxy-pass-to-a-linked-docker-container
     resolver 127.0.0.11 valid=30s;

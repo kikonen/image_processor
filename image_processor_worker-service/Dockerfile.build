@@ -10,8 +10,8 @@ COPY . /app/
 RUN env && \
     ls -al
 
-RUN bundle config set without 'development test'
-RUN bundle install
+RUN bundle config set without 'development test' && \
+    bundle install
 
 ####################
 FROM phusion/passenger-ruby27:2.1.0
