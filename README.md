@@ -79,7 +79,7 @@ scripts/production_push.sh x.y
 
 ```bash
 cd image_processor
-scripts/production_run.sh api bash -c "cd /home/app/webapp && rake db:drop db:create db:migrate db:setup"
+scripts/production_run.sh api bash -c "cd /home/app/webapp && rake db:drop db:create db:migrate db:setup && rm log/production.log"
 docker container prune
 ```
 
