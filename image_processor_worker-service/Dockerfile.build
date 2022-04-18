@@ -42,9 +42,9 @@ ENV PATH=$PATH:/home/app/webapp/bin
 
 ####################
 # https://github.com/phusion/passenger-docker
-RUN rm /etc/nginx/sites-enabled/default
-COPY docker/webapp.conf /etc/nginx/sites-enabled/webapp.conf
-COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
+#RUN rm /etc/nginx/sites-enabled/default
+#COPY docker/webapp.conf /etc/nginx/sites-enabled/webapp.conf
+#COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
 
 ####################
 COPY --chown=app:app . .
@@ -70,8 +70,11 @@ RUN chown -R app:app /home/app && \
 
 ####################
 # https://github.com/phusion/passenger-docker
-RUN rm -f /etc/service/nginx/down && \
-    apt-get clean && \
+# RUN rm -f /etc/service/nginx/down && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ####################
