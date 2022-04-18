@@ -10,5 +10,5 @@ echo "SERVICE_MODE: $SERVICE_MODE"
 if [[ "$SERVICE_MODE" == "debug" ]]; then
     sleep infinity
 else
-    bundle exec rails s -b 0.0.0.0 -p 3000
+    QUEUE=image_fetch bundle exec rake resque:work
 fi

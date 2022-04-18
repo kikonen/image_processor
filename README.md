@@ -79,8 +79,17 @@ scripts/production_push.sh x.y
 
 ```bash
 cd image_processor
-DOCKER_ENV=production scripts/rails_shell.sh api
-rake db:drop db:create db:migrate db:setup
+scripts/production_run.sh api bash -c "cd /home/app/webapp && rake db:drop db:create db:migrate db:setup"
+docker container prune
+```
+
+## Create fake token
+
+For a moment since auth is not implemented
+```bash
+curl "http://localhost:8122/api/tests/users"
+# ID from previous
+curl "http://localhost:8122/api/tests/token?id=d5383073-255a-40e3-916f-0ad321b90f66"
 ```
 
 ## Production run

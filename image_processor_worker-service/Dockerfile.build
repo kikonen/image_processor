@@ -20,41 +20,44 @@ RUN bundle config set without 'development test' && \
 #RUN rake assets:precompile
 
 ####################
-FROM phusion/passenger-ruby27:2.1.0
-WORKDIR /home/app/webapp
+FROM ruby:2.7.5
+WORKDIR /app
+
+RUN groupadd --gid 9999 app && \
+    useradd -m app --uid=9999 --gid=9999 && \
+    echo "app:password" | chpasswd
 
 RUN mkdir -p log && \
     mkdir -p tmp && \
-    chown -R app:app /home/app/webapp
+    chown -R app:app /app
 
 # https://github.com/phusion/passenger-docker
-ENV HOME /root
+ENV HOME /app
 
 # http://blog.siami.fr/diving-in-rails-the-request-handling
-ENV RAILS_ENV=production \
-    RAILS_SERVE_STATIC_FILES=false \
-    RAILS_FORCE_SSL=true \
-    SCRIPT_NAME=/worker \
-    RAILS_RELATIVE_URL_ROOT=/worker \
-    DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+ENV RAILS_ENV=production
 
-ENV PATH=$PATH:/home/app/webapp/bin
+ENV BUNDLE_PATH=/bundle/vendor \
+    GEM_HOME=/bundle/vendor/ruby/2.7.0 \
+    GEM_PATH=/bundle/vendor/ruby/2.7.0/bin \
+    PATH=$PATH:/app/bin
 
 ####################
-# https://github.com/phusion/passenger-docker
-#RUN rm /etc/nginx/sites-enabled/default
-#COPY docker/webapp.conf /etc/nginx/sites-enabled/webapp.conf
-#COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
+# NOTE KI CREATE dis for mounted volume permissions
+RUN mkdir -p /node_modules && \
+    mkdir -p /bundle && \
+    mkdir -p /app/log && \
+    mkdir -p /app/tmp && \
+    ln -sf /node_modules node_modules
 
 ####################
 COPY --chown=app:app . .
-#COPY --chown=app:app --from=builder /app/public/assets public/assets
-#COPY --chown=app:app --from=builder /app/public/packs public/packs
-COPY --chown=app:app --from=builder /bundle/vendor/ruby/2.7.0/ /usr/local/rvm/gems/ruby-2.7.5@global/
+COPY --chown=app:app --from=builder /bundle/ /bundle/
 
 ####################
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libcurl4-openssl-dev postgresql-client && \
+    apt-get install -y --no-install-recommends libcurl4-openssl-dev && \
+    apt-get install -y --no-install-recommends grep less vim && \
     apt-get install -y --no-install-recommends libexif-dev && \
     rm -rf /var/lib/apt/lists/*
 
@@ -65,7 +68,7 @@ RUN bundle config set without 'development test deploy' && \
     env && \
     ls -al
 
-RUN chown -R app:app /home/app && \
+RUN chown -R app:app /app && \
     ls -al
 
 ####################
@@ -78,7 +81,7 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ####################
-#USER app:app
+USER app:app
 
 ####################
-CMD ["/sbin/my_init"]
+ENTRYPOINT ["docker/docker-entrypoint-production.sh"]
