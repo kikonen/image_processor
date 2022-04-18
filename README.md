@@ -87,9 +87,18 @@ docker container prune
 
 For a moment since auth is not implemented
 ```bash
+# start API
+scripts/production_up.sh api
+
+# fetch example user
 curl "http://localhost:8122/api/tests/users"
+
 # ID from previous
 curl "http://localhost:8122/api/tests/token?id=d5383073-255a-40e3-916f-0ad321b90f66"
+
+# save token
+cat >.production_secrets/fake_token
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiZDRkYmEwODYtOWYyNy00NWU5LWFlYWItMWNjODJiZjQzZTE1IiwiZXhwIjoxNjUwMzk5MTE5fQ.xf4CRtThz2dTpjdU4_JwfiumdoWybGJQhknPppggyYc
 ```
 
 ## Production run
