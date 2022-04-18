@@ -17,7 +17,8 @@ services:
       - JWT_KEY
       - JWT_KEY_PUB
     volumes:
-      - auth_log:/app/log
+      - auth_log:/home/app/webapp/log
+      - auth_tmp:/home/app/webapp/tmp
       - ./image_processor_auth-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
       - ./image_processor_auth-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
@@ -36,7 +37,8 @@ services:
       - JWT_KEY
       - JWT_KEY_PUB
     volumes:
-      - api_log:/app/log
+      - api_log:/home/app/webapp/log
+      - api_tmp:/home/app/webapp/tmp
       - ./image_processor_api-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
       - ./image_processor_api-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
@@ -54,7 +56,8 @@ services:
       - JWT_KEY_PUB
       - FAKE_TOKEN
     volumes:
-      - ui_log:/app/log
+      - ui_log:/home/app/webapp/log
+      - ui_tmp:/home/app/webapp/tmp
       - ./image_processor_ui-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
       - ./image_processor_ui-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
     restart: always
@@ -71,7 +74,8 @@ services:
       - JWT_KEY
       - JWT_KEY_PUB
     volumes:
-      - worker_log:/app/log
+      - worker_log:/home/app/webapp/log
+      - worker_tmp:/home/app/webapp/tmp
       - worker_storage:/app/storage
       - ./image_processor_worker-service/docker/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
       - ./image_processor_worker-service/docker/webapp_env.conf:/etc/nginx/main.d/webapp_env.conf
@@ -93,7 +97,11 @@ services:
 
 volumes:
   auth_log:
+  auth_tmp:
   api_log:
+  api_tmp:
   ui_log:
+  ui_tmp:
   worker_log:
+  worker_tmp:
   worker_storage:
