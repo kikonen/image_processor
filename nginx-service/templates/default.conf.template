@@ -20,7 +20,7 @@ server {
 
         set $docker_env "${DOCKER_ENV}";
 
-        set $sl_ahost $host;
+        set $sl_host $host;
         set $sl_proto $scheme;
         set $sl_port $server_port;
 
@@ -57,7 +57,7 @@ server {
 
         set $docker_env "${DOCKER_ENV}";
 
-        set $sl_ahost $host;
+        set $sl_host $host;
         set $sl_proto $scheme;
         set $sl_port $server_port;
 
@@ -94,7 +94,7 @@ server {
 
         set $docker_env "${DOCKER_ENV}";
 
-        set $sl_ahost $host;
+        set $sl_host $host;
         set $sl_proto $scheme;
         set $sl_port $server_port;
 
