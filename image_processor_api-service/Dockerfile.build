@@ -42,6 +42,8 @@ COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
 
 ####################
 COPY --chown=app:app . .
+#COPY --chown=app:app --from=builder /app/public/assets public/assets
+#COPY --chown=app:app --from=builder /app/public/packs public/packs
 COPY --chown=app:app --from=builder /bundle/vendor/ruby/2.7.0/ /usr/local/rvm/gems/ruby-2.7.5@global/
 
 ####################
