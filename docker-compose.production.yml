@@ -14,6 +14,8 @@ services:
       CONTAINER_VERSION: ${BUILD_TAG}
     secrets:
       - AUTH_MASTER_KEY
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
       - JWT_KEY
       - JWT_KEY_PUB
     volumes:

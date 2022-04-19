@@ -20,6 +20,8 @@ services:
       - .development_env
     secrets:
       - AUTH_MASTER_KEY
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
       - JWT_KEY
       - JWT_KEY_PUB
     labels:

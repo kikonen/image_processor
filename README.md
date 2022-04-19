@@ -127,6 +127,8 @@ scripts/production_up.sh -d
 - https://github.com/omniauth/omniauth
 - https://github.com/rails/rails/issues/26180
 - https://github.com/rails/rails/issues/39366
+- https://github.com/rails/rails/issues/22965
+- https://github.com/cookpad/omniauth-rails_csrf_protection/issues/8
 
 ## JWT
 - https://medium.com/binar-academy/rails-api-jwt-authentication-a04503ea3248

@@ -23,15 +23,15 @@ server {
         set $sl_host $host;
         set $sl_proto $scheme;
         set $sl_port ${NGINX_PORT};
-        set $sl_ssl off;
         set $sl_origin $sl_proto://$sl_host:$sl_port;
+        set $sl_ssl off;
 
         if ($http_x_forwarded_proto = "https") {
             set $sl_host $http_x_forwarded_host;
             set $sl_proto $http_x_forwarded_proto;
             set $sl_port $http_x_forwarded_port;
-            set $sl_ssl on;
             set $sl_origin $sl_proto://$sl_host;
+            set $sl_ssl on;
         }
 
         proxy_read_timeout 3600;
@@ -53,8 +53,8 @@ server {
         # https://stackoverflow.com/questions/29279084/nginx-proxy-add-x-forwarded-for-and-real-ip-header
         proxy_set_header X-Forwarded-For "$http_x_forwarded_for, $realip_remote_addr";
 
-        # NOTE KI do NOT discard /ui for production (due to passenger)
-        # NOTE KI discard /ui for development
+        # NOTE KI do NOT discard /auth for production (due to passenger)
+        # NOTE KI discard /auth for development
         if ($docker_env = "development") {
             rewrite ^\/auth/?(.*)$ /$1 break;
         }

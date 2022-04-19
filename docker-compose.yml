@@ -64,6 +64,7 @@ services:
     depends_on:
       - nginx
       - api
+      - auth
 
   worker:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_worker
@@ -140,6 +141,10 @@ secrets:
     file: ${SECRETS_DIR}/UI_MASTER_KEY
   WORKER_MASTER_KEY:
     file: ${SECRETS_DIR}/WORKER_MASTER_KEY
+  GOOGLE_CLIENT_ID:
+    file: ${SECRETS_DIR}/GOOGLE_CLIENT_ID
+  GOOGLE_CLIENT_SECRET:
+    file: ${SECRETS_DIR}/GOOGLE_CLIENT_SECRET
   JWT_KEY:
     file: ${SECRETS_DIR}/jwt_key
   JWT_KEY_PUB:
