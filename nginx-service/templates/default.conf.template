@@ -22,12 +22,16 @@ server {
 
         set $sl_host $host;
         set $sl_proto $scheme;
-        set $sl_port $server_port;
+        set $sl_port ${NGINX_PORT};
+        set $sl_ssl off;
+        set $sl_origin $sl_proto://$sl_host:$sl_port;
 
         if ($http_x_forwarded_proto = "https") {
             set $sl_host $http_x_forwarded_host;
             set $sl_proto $http_x_forwarded_proto;
             set $sl_port $http_x_forwarded_port;
+            set $sl_ssl on;
+            set $sl_origin $sl_proto://$sl_host;
         }
 
         proxy_read_timeout 3600;
@@ -36,10 +40,13 @@ server {
 
         client_max_body_size 100M;
 
-        proxy_set_header Host              $sl_host;
+        proxy_set_header Host              $sl_host:$sl_port;
+        proxy_set_header Port              $sl_port;
+        proxy_set_header Origin            $sl_origin;
         proxy_set_header X-Forwarded-Proto $sl_proto;
-        proxy_set_header X-Forwarded-Host  $sl_host;
+        proxy_set_header X-Forwarded-Host  $sl_host:$sl_port;
         proxy_set_header X-Forwarded-Port  $sl_port;
+        proxy_set_header X-Forwarded-Ssl   $sl_ssl;
 
         proxy_set_header X-Real-IP         $remote_addr;
         #proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
@@ -49,7 +56,7 @@ server {
         # NOTE KI do NOT discard /ui for production (due to passenger)
         # NOTE KI discard /ui for development
         if ($docker_env = "development") {
-            rewrite ^\/ui/?(.*)$ /$1 break;
+            rewrite ^\/auth/?(.*)$ /$1 break;
         }
 
         # https://tarunlalwani.com/post/nginx-proxypass-server-paths/
@@ -63,12 +70,16 @@ server {
 
         set $sl_host $host;
         set $sl_proto $scheme;
-        set $sl_port $server_port;
+        set $sl_port ${NGINX_PORT};
+        set $sl_ssl off;
+        set $sl_origin $sl_proto://$sl_host:$sl_port;
 
         if ($http_x_forwarded_proto = "https") {
             set $sl_host $http_x_forwarded_host;
             set $sl_proto $http_x_forwarded_proto;
             set $sl_port $http_x_forwarded_port;
+            set $sl_ssl on;
+            set $sl_origin $sl_proto://$sl_host;
         }
 
         proxy_read_timeout 3600;
@@ -77,10 +88,13 @@ server {
 
         client_max_body_size 100M;
 
-        proxy_set_header Host              $sl_host;
+        proxy_set_header Host              $sl_host:$sl_port;
+        proxy_set_header Port              $sl_port;
+        proxy_set_header Origin            $sl_origin;
         proxy_set_header X-Forwarded-Proto $sl_proto;
-        proxy_set_header X-Forwarded-Host  $sl_host;
+        proxy_set_header X-Forwarded-Host  $sl_host:$sl_port;
         proxy_set_header X-Forwarded-Port  $sl_port;
+        proxy_set_header X-Forwarded-Ssl   on;
 
         proxy_set_header X-Real-IP         $remote_addr;
         #proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
@@ -90,7 +104,7 @@ server {
         # NOTE KI do NOT discard /ui for production (due to passenger)
         # NOTE KI discard /ui for development
         if ($docker_env = "development") {
-            rewrite ^\/ui/?(.*)$ /$1 break;
+            rewrite ^\/api/?(.*)$ /$1 break;
         }
 
         # https://tarunlalwani.com/post/nginx-proxypass-server-paths/
@@ -104,12 +118,16 @@ server {
 
         set $sl_host $host;
         set $sl_proto $scheme;
-        set $sl_port $server_port;
+        set $sl_port ${NGINX_PORT};
+        set $sl_origin $sl_proto://$sl_host:$sl_port;
+        set $sl_ssl off;
 
         if ($http_x_forwarded_proto = "https") {
             set $sl_host $http_x_forwarded_host;
             set $sl_proto $http_x_forwarded_proto;
             set $sl_port $http_x_forwarded_port;
+            set $sl_origin $sl_proto://$sl_host;
+            set $sl_ssl on;
         }
 
         proxy_read_timeout 3600;
@@ -118,10 +136,13 @@ server {
 
         client_max_body_size 100M;
 
-        proxy_set_header Host              $sl_host;
+        proxy_set_header Host              $sl_host:$sl_port;
+        proxy_set_header Port              $sl_port;
+        proxy_set_header Origin            $sl_origin;
         proxy_set_header X-Forwarded-Proto $sl_proto;
-        proxy_set_header X-Forwarded-Host  $sl_host;
+        proxy_set_header X-Forwarded-Host  $sl_host:$sl_port;
         proxy_set_header X-Forwarded-Port  $sl_port;
+        proxy_set_header X-Forwarded-Ssl   $sl_ssl;
 
         proxy_set_header X-Real-IP         $remote_addr;
         #proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;

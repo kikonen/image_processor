@@ -92,9 +92,11 @@ scripts/production_up.sh api
 
 # fetch example user
 curl "http://localhost:8122/api/tests/users"
+curl "https://image.ikari.fi/api/tests/users"
 
 # ID from previous
 curl "http://localhost:8122/api/tests/token?id=d5383073-255a-40e3-916f-0ad321b90f66"
+curl "https://image.ikari.fi/api/tests/token?id=d5383073-255a-40e3-916f-0ad321b90f66"
 
 # save token
 cat >.production_secrets/fake_token
@@ -117,6 +119,10 @@ scripts/production_up.sh -d
 - https://smartlogic.io/blog/permitting-nested-arrays-using-strong-params-in-rails/
 - https://guides.rubyonrails.org/active_model_basics.html
 - https://stackoverflow.com/questions/13537920/ruby-split-by-whitespace
+- https://medium.com/@jenn.leigh.hansen/google-oauth2-for-rails-ba1bcfd1b863
+- https://github.com/omniauth/omniauth
+- https://github.com/rails/rails/issues/26180
+- https://github.com/rails/rails/issues/39366
 
 ## JWT
 - https://medium.com/binar-academy/rails-api-jwt-authentication-a04503ea3248
