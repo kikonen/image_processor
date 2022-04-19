@@ -2,6 +2,10 @@
 
 Images are uploaded, and then processed asynchrounosly
 
+## Demo
+
+[Image processor](https://image.ikari.fi/ui)
+
 # Design
 
 - [Architecture](design/architecture.pdf)
