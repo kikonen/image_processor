@@ -1,84 +1,33 @@
 ARG DOCKER_REGISTRY_URL
 ARG BUILD_NAME
 ARG BASE_TAG
-FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_worker:$BASE_TAG as builder
+FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_worker:$BASE_TAG
 WORKDIR /app
-
-####################
-#COPY . .yarnrc /app/
-COPY . /app/
-
-RUN env && \
-    ln -sf /node_modules node_modules && \
-    ls -al
-
-#RUN yarn install
-
-RUN bundle config set without 'development test' && \
-    bundle install
-
-#RUN rake assets:precompile
-
-####################
-FROM ruby:2.7.5
-WORKDIR /app
-
-RUN groupadd --gid 9999 app && \
-    useradd -m app --uid=9999 --gid=9999 && \
-    echo "app:password" | chpasswd
-
-RUN mkdir -p log && \
-    mkdir -p tmp && \
-    chown -R app:app /app
-
-# https://github.com/phusion/passenger-docker
-ENV HOME /app
-
-# http://blog.siami.fr/diving-in-rails-the-request-handling
-ENV RAILS_ENV=production
-
-ENV BUNDLE_PATH=/bundle/vendor \
-    GEM_HOME=/bundle/vendor/ruby/2.7.0 \
-    GEM_PATH=/bundle/vendor/ruby/2.7.0/bin \
-    PATH=$PATH:/app/bin
-
-####################
-# NOTE KI CREATE dis for mounted volume permissions
-RUN mkdir -p /node_modules && \
-    mkdir -p /bundle && \
-    mkdir -p /app/log && \
-    mkdir -p /app/tmp && \
-    ln -sf /node_modules node_modules
 
 ####################
 COPY --chown=app:app . .
-COPY --chown=app:app --from=builder /bundle/ /bundle/
+
+#RUN yarn install
+
+RUN bundle config set without 'development:test' && \
+    RAILS_GROUPS="deploy" bundle install && \
+    bundle config set without 'development:test:deploy' && \
+    rm -fr tmp/* log/*
 
 ####################
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libcurl4-openssl-dev && \
-    apt-get install -y --no-install-recommends grep less vim && \
-    apt-get install -y --no-install-recommends libexif-dev && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN bundle config set without 'development test deploy' && \
-    bundle install && \
-    rm -fr vendor && \
+RUN rm -fr vendor && \
     ln -sf /var/run/secrets/WORKER_MASTER_KEY config/master.key && \
+    chown -R app:app /app && \
     env && \
-    ls -al
-
-RUN chown -R app:app /app && \
     ls -al
 
 ####################
 # https://github.com/phusion/passenger-docker
-# RUN rm -f /etc/service/nginx/down && \
-#     apt-get clean && \
-#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* tmp/* log/*
+
+####################
+ENV DISABLE_DATABASE_ENVIRONMENT_CHECK=1
 
 ####################
 USER app:app
