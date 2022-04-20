@@ -37,6 +37,13 @@ cp _image_processor_secrets .developmment_secrets
 
 ```bash
 cd image_processor
+scripts/development_run.sh api bash -c "rake db:drop db:create db:migrate db:setup"
+docker container prune
+```
+
+or via shell session
+```bash
+cd image_processor
 scripts/rails_shell.sh api
 rake db:drop db:create db:migrate db:setup
 ```
