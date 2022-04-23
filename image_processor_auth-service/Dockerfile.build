@@ -10,6 +10,8 @@ WORKDIR /home/app/webapp
 ENV SCRIPT_NAME=/auth \
     RAILS_RELATIVE_URL_ROOT=/auth
 
+ENV PATH=$PATH:/home/app/webapp/bin
+
 ####################
 COPY --chown=app:app . .
 

@@ -10,6 +10,8 @@ WORKDIR /home/app/webapp
 ENV SCRIPT_NAME=/api \
     RAILS_RELATIVE_URL_ROOT=/api
 
+ENV PATH=$PATH:/home/app/webapp/bin
+
 ####################
 COPY --chown=app:app . .
 

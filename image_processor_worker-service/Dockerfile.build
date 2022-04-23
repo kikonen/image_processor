@@ -5,6 +5,9 @@ FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_worker:$BASE_TAG
 WORKDIR /app
 
 ####################
+ENV PATH=$PATH:/app//bin
+
+####################
 COPY --chown=app:app . .
 
 #RUN yarn install
