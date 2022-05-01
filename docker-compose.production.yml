@@ -56,7 +56,6 @@ services:
       - UI_MASTER_KEY
       - JWT_KEY
       - JWT_KEY_PUB
-      - FAKE_TOKEN
     volumes:
       - ui_log:/home/app/webapp/log
       - ui_tmp:/home/app/webapp/tmp
