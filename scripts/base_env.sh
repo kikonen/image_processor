@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ $BASE_ENV_INCLUDED == 1 ]]; then
+    #echo "$0 already included"
+    return
+fi
+export BASE_ENV_INCLUDED=1
+
 SCRIPT_DIR=$(realpath $(dirname $0))
 ROOT_DIR=$(dirname $SCRIPT_DIR)
 if [[ -f $ROOT_DIR/.env ]]; then
@@ -28,9 +34,7 @@ if [[ -f $ENV_FILE ]]; then
    . $ENV_FILE
 fi
 
-SECRETS_DIR=$ROOT_DIR/.${DOCKER_ENV}_secrets
-
-DOCKER_COMPOSE_BASE="docker-compose --project-dir=${ROOT_DIR} --project-name ${BASE_NAME}_${DOCKER_ENV} --env-file ${ENV_FILE}"
+DOCKER_COMPOSE_BASE="docker compose --project-directory=${ROOT_DIR} --project-name ${BASE_NAME}_${DOCKER_ENV} --env-file ${ENV_FILE}"
 
 if [[ $DOCKER_ENV == 'production' ]]; then
     DOCKER_COMPOSE="${DOCKER_COMPOSE_BASE} -f docker-compose.yml -f docker-compose.${DOCKER_ENV}.yml"
@@ -42,7 +46,12 @@ else
     DOCKER_COMPOSE="${DOCKER_COMPOSE_BASE}"
 fi
 
+SECRETS_DIR="${ROOT_DIR}/.${DOCKER_ENV}_secrets"
+
 COMPOSE_PROFILES=${DOCKER_ENV}
+
+COMPOSE_DOCKER_CLI_BUILD=1
+DOCKER_BUILDKIT=1
 
 DOCKER_UID=$(id -u)
 DOCKER_GID=$(id -g)
@@ -58,9 +67,12 @@ export SCRIPT_DIR
 export PROJECTS_DIR
 export BASE_NAME
 export BUILD_TAG
-export COMPOSE_PROFILES
 
 export SECRETS_DIR
+
+export COMPOSE_PROFILES
+export COMPOSE_DOCKER_CLI_BUILD
+export DOCKER_BUILDKIT
 
 export CLONE_PROJECTS
 export BUILD_NAME
