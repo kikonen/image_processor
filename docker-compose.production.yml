@@ -5,24 +5,6 @@ services:
       - .production_env
     restart: unless-stopped
 
-  auth:
-    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_auth:${BUILD_TAG}
-    env_file:
-      - .env
-      - .production_env
-    environment:
-      CONTAINER_VERSION: ${BUILD_TAG}
-    secrets:
-      - AUTH_MASTER_KEY
-      - GOOGLE_CLIENT_ID
-      - GOOGLE_CLIENT_SECRET
-      - JWT_KEY
-      - JWT_KEY_PUB
-    volumes:
-      - auth_log:/home/app/webapp/log
-      - auth_tmp:/home/app/webapp/tmp
-    restart: unless-stopped
-
   api:
     image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_api:${BUILD_TAG}
     env_file:
@@ -40,6 +22,28 @@ services:
       - api_log:/home/app/webapp/log
       - api_tmp:/home/app/webapp/tmp
     restart: unless-stopped
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=9999,gid=999
+
+  auth:
+    image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_auth:${BUILD_TAG}
+    env_file:
+      - .env
+      - .production_env
+    environment:
+      CONTAINER_VERSION: ${BUILD_TAG}
+    secrets:
+      - AUTH_MASTER_KEY
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - JWT_KEY
+      - JWT_KEY_PUB
+    volumes:
+      - auth_log:/home/app/webapp/log
+      - auth_tmp:/home/app/webapp/tmp
+    restart: unless-stopped
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=9999,gid=999
 
   ui:
     image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_ui:${BUILD_TAG}
@@ -57,6 +61,8 @@ services:
       - ui_log:/home/app/webapp/log
       - ui_tmp:/home/app/webapp/tmp
     restart: unless-stopped
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=9999,gid=999
 
   worker:
     image: ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_build_worker:${BUILD_TAG}
@@ -76,6 +82,8 @@ services:
       - worker_tmp:/home/app/webapp/tmp
       - worker_storage:/app/storage
     restart: unless-stopped
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=9999,gid=999
 
   db:
     env_file:

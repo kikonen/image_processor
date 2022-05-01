@@ -8,35 +8,6 @@ services:
     stdin_open: true
     tty: true
 
-  auth:
-    build:
-      context: ./projects/image_processor_auth
-      dockerfile: Dockerfile
-      args:
-        DOCKER_UID: ${DOCKER_UID}
-        DOCKER_GID: ${DOCKER_GID}
-    env_file:
-      - .env
-      - .development_env
-    secrets:
-      - AUTH_MASTER_KEY
-      - GOOGLE_CLIENT_ID
-      - GOOGLE_CLIENT_SECRET
-      - JWT_KEY
-      - JWT_KEY_PUB
-    labels:
-      ports: "3000"
-    volumes:
-      - ./projects/image_processor_auth:/app
-      - auth_assets:/app/public/assets
-      - auth_bundle:/bundle
-      - auth_node_modules:/node_modules
-      - auth_tmp:/app/tmp
-    tmpfs:
-      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
-    stdin_open: true
-    tty: true
-
   api:
     build:
       context: ./projects/image_processor_api
@@ -44,6 +15,7 @@ services:
       args:
         DOCKER_UID: ${DOCKER_UID}
         DOCKER_GID: ${DOCKER_GID}
+        APP_PATH: /api
     env_file:
       - .env
       - .development_env
@@ -58,9 +30,39 @@ services:
     volumes:
       - ./projects/image_processor_api:/app
       - api_assets:/app/public/assets
-      - api_bundle:/bundle
-      - api_node_modules:/node_modules
+      - api_bundle:/usr/local/bundle
+      - api_node_modules:/app/node_modules
       - api_tmp:/app/tmp
+    tmpfs:
+      - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
+    stdin_open: true
+    tty: true
+
+  auth:
+    build:
+      context: ./projects/image_processor_auth
+      dockerfile: Dockerfile
+      args:
+        DOCKER_UID: ${DOCKER_UID}
+        DOCKER_GID: ${DOCKER_GID}
+        APP_PATH: /auth
+    env_file:
+      - .env
+      - .development_env
+    secrets:
+      - AUTH_MASTER_KEY
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - JWT_KEY
+      - JWT_KEY_PUB
+    labels:
+      ports: "3000"
+    volumes:
+      - ./projects/image_processor_auth:/app
+      - auth_assets:/app/public/assets
+      - auth_bundle:/usr/local/bundle
+      - auth_node_modules:/app/node_modules
+      - auth_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
     stdin_open: true
@@ -73,6 +75,7 @@ services:
       args:
         DOCKER_UID: ${DOCKER_UID}
         DOCKER_GID: ${DOCKER_GID}
+        APP_PATH: /ui
     env_file:
       - .env
       - .development_env
@@ -86,8 +89,8 @@ services:
     volumes:
       - ./projects/image_processor_ui:/app
       - ui_assets:/app/public/assets
-      - ui_bundle:/bundle
-      - ui_node_modules:/node_modules
+      - ui_bundle:/usr/local/bundle
+      - ui_node_modules:/app/node_modules
       - ui_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}
@@ -101,6 +104,7 @@ services:
       args:
         DOCKER_UID: ${DOCKER_UID}
         DOCKER_GID: ${DOCKER_GID}
+        APP_PATH: /worker
     env_file:
       - .env
       - .development_env
@@ -115,8 +119,8 @@ services:
     volumes:
       - ./projects/image_processor_worker:/app
       - worker_assets:/app/public/assets
-      - worker_bundle:/bundle
-      - worker_node_modules:/node_modules
+      - worker_bundle:/usr/local/bundle
+      - worker_node_modules:/app/node_modules
       - worker_tmp:/app/tmp
     tmpfs:
       - /pids:mode=7777,size=1k,uid=${DOCKER_UID},gid=${DOCKER_GID}

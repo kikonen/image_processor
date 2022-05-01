@@ -10,6 +10,8 @@ services:
     build:
       context: ./projects/image_processor_api
       dockerfile: Dockerfile.build
+      args:
+        APP_PATH: /api
     env_file:
       - .env
       - .build_env
@@ -18,6 +20,8 @@ services:
     build:
       context: ./projects/image_processor_auth
       dockerfile: Dockerfile.build
+      args:
+        APP_PATH: /auth
     env_file:
       - .env
       - .build_env
@@ -26,6 +30,8 @@ services:
     build:
       context: ./projects/image_processor_ui
       dockerfile: Dockerfile.build
+      args:
+        APP_PATH: /ui
     env_file:
       - .env
       - .build_env
@@ -34,6 +40,8 @@ services:
     build:
       context: ./projects/image_processor_worker
       dockerfile: Dockerfile.build
+      args:
+        APP_PATH: /worker
     env_file:
       - .env
       - .build_env

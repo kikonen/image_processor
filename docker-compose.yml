@@ -15,22 +15,6 @@ services:
       - "127.0.0.1:${NGINX_PORT}:8080"
     command: ['nginx', '-g', 'daemon off;']
 
-  auth:
-    container_name: ${BASE_NAME}_${DOCKER_ENV}_auth
-    environment:
-      DOCKER_ENV: ${DOCKER_ENV}
-      SERVICE_MODE: ${SERVICE_MODE}
-    logging:
-      options:
-        max-size: "1m"
-        max-file: "2"
-    working_dir: /app
-    networks:
-      - frontend
-    depends_on:
-      - nginx
-      - api
-
   api:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_api
     environment:
@@ -48,6 +32,22 @@ services:
       - db
       - nginx
       - redis
+
+  auth:
+    container_name: ${BASE_NAME}_${DOCKER_ENV}_auth
+    environment:
+      DOCKER_ENV: ${DOCKER_ENV}
+      SERVICE_MODE: ${SERVICE_MODE}
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "2"
+    working_dir: /app
+    networks:
+      - frontend
+    depends_on:
+      - nginx
+      - api
 
   ui:
     container_name: ${BASE_NAME}_${DOCKER_ENV}_ui
