@@ -3,14 +3,17 @@ ARG BUILD_NAME
 ARG BASE_TAG
 FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_api:$BASE_TAG
 ARG API_MASTER_KEY
+ARG APP_PATH
 
 WORKDIR /home/app/webapp
+
+RUN test -n "$APP_PATH"
 
 ####################
 # http://blog.siami.fr/diving-in-rails-the-request-handling
 # NOTE KI base_url must be set *BEFORE* assets:precompile
-ENV SCRIPT_NAME=$APP_PATH \
-    RAILS_RELATIVE_URL_ROOT=$APP_PATH \
+ENV SCRIPT_NAME="$APP_PATH" \
+    RAILS_RELATIVE_URL_ROOT="$APP_PATH" \
     PIDFILE=/pids/server.pid
 
 ####################
@@ -22,7 +25,6 @@ COPY --chown=app:app . .
 RUN yarn install && \
     bundle config set without 'development:test' && \
     RAILS_GROUPS="deploy" bundle install && \
-    RAILS_GROUPS="deploy" RAILS_MASTER_KEY="$API_MASTER_KEY" rake assets:precompile && \
     bundle config set without 'development:test:deploy' && \
     rm -fr tmp/* log/* node_modules vendor
 

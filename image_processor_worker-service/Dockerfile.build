@@ -3,8 +3,11 @@ ARG BUILD_NAME
 ARG BASE_TAG
 FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_worker:$BASE_TAG
 ARG WORKER_MASTER_KEY
+ARG APP_PATH
 
 WORKDIR /app
+
+RUN test -n "$APP_PATH"
 
 ####################
 RUN chown -R app:app /app
@@ -15,7 +18,6 @@ COPY --chown=app:app . .
 RUN yarn install && \
     bundle config set without 'development:test' && \
     RAILS_GROUPS="deploy" bundle install && \
-    RAILS_GROUPS="deploy" RAILS_MASTER_KEY="$UI_MASTER_KEY" rake assets:precompile && \
     bundle config set without 'development:test:deploy' && \
     rm -fr tmp/* log/* node_modules vendor
 
