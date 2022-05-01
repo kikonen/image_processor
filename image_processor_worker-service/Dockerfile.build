@@ -2,35 +2,30 @@ ARG DOCKER_REGISTRY_URL
 ARG BUILD_NAME
 ARG BASE_TAG
 FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_worker:$BASE_TAG
+ARG WORKER_MASTER_KEY
+
 WORKDIR /app
 
 ####################
-ENV PATH=$PATH:/app//bin
+RUN chown -R app:app /app
 
 ####################
 COPY --chown=app:app . .
 
-#RUN yarn install
-
-RUN bundle config set without 'development:test' && \
+RUN yarn install && \
+    bundle config set without 'development:test' && \
     RAILS_GROUPS="deploy" bundle install && \
+    RAILS_GROUPS="deploy" RAILS_MASTER_KEY="$UI_MASTER_KEY" rake assets:precompile && \
     bundle config set without 'development:test:deploy' && \
-    rm -fr tmp/* log/*
+    rm -fr tmp/* log/* node_modules vendor
 
 ####################
-RUN rm -fr vendor && \
-    ln -sf /var/run/secrets/WORKER_MASTER_KEY config/master.key && \
-    chown -R app:app /app && \
-    env && \
-    ls -al
+RUN ln -sf /var/run/secrets/WORKER_MASTER_KEY config/master.key && \
+    chown -R app:app /home/app
 
 ####################
-# https://github.com/phusion/passenger-docker
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* tmp/* log/*
-
-####################
-ENV DISABLE_DATABASE_ENVIRONMENT_CHECK=1
 
 ####################
 USER app:app

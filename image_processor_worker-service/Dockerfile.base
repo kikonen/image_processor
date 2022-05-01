@@ -7,7 +7,9 @@ ENV RAILS_ENV=production
 # https://github.com/phusion/passenger-docker
 ENV HOME=/app
 
-ENV PATH=$PATH:/app//bin
+ENV PATH=$PATH:/app/node_modules/.bin \
+    PATH=$PATH:/app/bin \
+    EDITOR=vim
 
 ####################
 RUN groupadd --gid 9999 app && \
@@ -19,6 +21,7 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get update && \
     apt-get install -y --no-install-recommends nodejs && \
     apt-get install -y --no-install-recommends libcurl4-openssl-dev libpq-dev && \
+    apt-get install -y --no-install-recommends postgresql-client grep less vim && \
     apt-get install -y --no-install-recommends libexif-dev && \
     npm install --global yarn && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -26,8 +29,9 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
 
 ####################
 RUN mkdir -p log && \
-    mkdir -p tmp && \
-    chown -R app:app /app
+    mkdir -p tmp
+
+RUN chown -R app:app /app
 
 ####################
 COPY --chown=app:app Gemfile Gemfile.lock /app/
@@ -39,6 +43,4 @@ COPY --chown=app:app Gemfile Gemfile.lock /app/
 RUN bundle config set without 'development:test' && \
     RAILS_GROUPS="deploy" bundle install
 
-RUN rm -fr Gemfile* package* yarn* .yarnrc .bundle && \
-    pwd && \
-    ls -al
+RUN rm -fr Gemfile* package* yarn* .yarnrc .bundle

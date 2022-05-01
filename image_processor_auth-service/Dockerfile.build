@@ -2,39 +2,39 @@ ARG DOCKER_REGISTRY_URL
 ARG BUILD_NAME
 ARG BASE_TAG
 FROM ${DOCKER_REGISTRY_URL}/${BUILD_NAME}_base_auth:$BASE_TAG
+ARG AUTH_MASTER_KEY
+
 WORKDIR /home/app/webapp
 
 ####################
 # http://blog.siami.fr/diving-in-rails-the-request-handling
 # NOTE KI base_url must be set *BEFORE* assets:precompile
-ENV SCRIPT_NAME=/auth \
-    RAILS_RELATIVE_URL_ROOT=/auth
+ENV SCRIPT_NAME=$APP_PATH \
+    RAILS_RELATIVE_URL_ROOT=$APP_PATH \
+    PIDFILE=/pids/server.pid
 
-ENV PATH=$PATH:/home/app/webapp/bin
+####################
+RUN chown -R app:app /home/app/webapp
 
 ####################
 COPY --chown=app:app . .
 
-#RUN yarn install
-
-RUN bundle config set without 'development:test' && \
+RUN yarn install && \
+    bundle config set without 'development:test' && \
     RAILS_GROUPS="deploy" bundle install && \
-    rake assets:precompile && \
+    RAILS_GROUPS="deploy" RAILS_MASTER_KEY="$AUTH_MASTER_KEY" rake assets:precompile && \
     bundle config set without 'development:test:deploy' && \
-    rm -fr tmp/* log/*
+    rm -fr tmp/* log/* node_modules vendor
 
 ####################
 # https://github.com/phusion/passenger-docker
 RUN rm /etc/nginx/sites-enabled/default
 COPY docker/webapp.conf /etc/nginx/sites-enabled/webapp.conf
-COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
+#COPY docker/webapp_env.conf /etc/nginx/main.d/webapp_env.conf
 
 ####################
-RUN rm -fr vendor && \
-    ln -sf /var/run/secrets/AUTH_MASTER_KEY config/master.key && \
-    chown -R app:app /home/app && \
-    env && \
-    ls -al
+RUN ln -sf /var/run/secrets/AUTH_MASTER_KEY config/master.key && \
+    chown -R app:app /home/app
 
 ####################
 # https://github.com/phusion/passenger-docker
