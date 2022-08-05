@@ -29,7 +29,7 @@ Images are uploaded, and then processed asynchrounosly
 ```bash
 cp _env .env
 cp _development_env .development_env
-cp _image_processor_secrets .developmment_secrets
+cp _image_processor_secrets .development_secrets
 
 ```
 
